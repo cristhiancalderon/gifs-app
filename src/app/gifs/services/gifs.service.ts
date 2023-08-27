@@ -13,7 +13,12 @@ export class GifsService {
 
   //api.giphy.com/v1/gifs/search?api_key=9VU1UyMdMeJJ7iN9DNKbnp0zQQMAHV8Q&limit=10&q=valorant
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadLocalStorage();
+    this.showFirstGif();
+
+    console.log('Gifs Service Ready');
+   }
 
   get tagHistory() {
     return [...this._tagHistory];
@@ -34,6 +39,20 @@ export class GifsService {
 
   private saveLocalStorage(): void{
     localStorage.setItem('history', JSON.stringify(this._tagHistory));
+  }
+
+  private showFirstGif(): void{
+    if(!localStorage.getItem('history')) return;
+
+    this.searchTag(this._tagHistory[0]);
+
+  }
+
+  private loadLocalStorage():void{
+    if(!localStorage.getItem('history')) return;
+
+    this._tagHistory = JSON.parse(localStorage.getItem('history')!);
+
   }
 
   public searchTag(tag: string):void {
